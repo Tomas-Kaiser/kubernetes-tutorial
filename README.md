@@ -175,3 +175,24 @@ or
 `kubectl apply -f clusterIP.service.yml`
 
 `kubectl get services`
+
+### Storage
+
+We can store data among other Pods via Volumes or of course we can use DB.
+
+A Volume can be used to hold data and state for Pods and containers.
+
+- A pod can have multiple Volumes attached to it.
+- Containers rely on a mounthPath to access a Volume
+- Kuberentes supports:
+  - Volumes
+  - PersistanceVolumes (to connect external storage)
+  - PersistanceVolumeClaims
+  - StorageClasses
+
+Volumes & Volume Mounts:
+
+- a Volume references a storage location.
+- must have a unique name
+- attached to a Pod and may or may not be tied to the Pod's lifetime (depending on Volume type)
+- a Volume Mount references a Volume by name and defines a mountPath
