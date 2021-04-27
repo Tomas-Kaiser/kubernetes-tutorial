@@ -14,7 +14,7 @@ just has one master node along with one worker node, but it is good enough.
 
 Go to Docker preferences > Kubernetes > check the enable Kubernetes > click on Install button
 
-### kubectl commands
+### kubectl commands | Creating Pod
 
 We use kubeclt command line to interact with master node.
 
@@ -87,3 +87,91 @@ spec:               > The spec/blueprint for the Pod
     periodSeconds: 5
 
 ```
+
+### Deployments
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec: # overall spec
+  minReadySeconds: 10 # to wait 10 seconds before we start receiving traffic
+  replicas: 4
+  selector: # select Pod template label(s) to use
+    matchLabels:
+      app: my-nginx
+  template: # this template could be here or placed in another file
+    metadata:
+      labels:
+        app: my-nginx
+    spec: # This contains containers that will run in the pod (generaly one container per pod)
+      containers:
+        - name: my-nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "128Mi" # 128MB
+              cpu: "200m" # 200 milicpi (.2 cpu or 20% of the cpu)
+
+```
+
+`kubectl create -f nginx.deployment.yml --save-config`
+`kubectl describe [pod | deployment] [pod-name | deployment-name]`
+`kubectl apply -f nginx.deployment.yml`
+`kubectl get deployments --show-labels`
+`kubectl get deployments -l app=my-nginx` -l stands for label
+`kubectl scale -f nginx.deployment.yml --replicas=4`
+
+### Creating Services
+
+A service provides a single point of entry for accessing one or more Pods.
+
+Services types:
+
+- ClusterIP - Expose the service on a cluster-internal IP (default)
+- NodePort - Expose the service on each Node's IP at a static port
+- LoadBalancer - Provision an external IP to act as a load balancer for the service
+- ExternalName - Maps a service to a DNS name
+
+`kubectl port-forward deployment/my-nginx 8080:80`
+
+Creating service via yml:
+
+```
+apiVersion: v1      > Kubernetes API version and resource type (Service)
+kind: service
+metadata:           > Metadata about the service
+spec:
+  type:             > Type of service (ClusterIP, NodePort, LoadBalancer) - defaults to ClusterIp
+
+  selector:         > Select Pod template label(s) that service will apply
+
+  ports:            > Define container target port and the port for the service
+```
+
+Example:
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: my-nginx
+  ports:
+    - port: 8080
+      targetPort: 80
+```
+
+`kubectl create -f clusterIP.service.yml --save-config`
+or
+`kubectl apply -f clusterIP.service.yml`
+
+`kubectl get services`
