@@ -48,3 +48,14 @@ is ok but it will not create anything. The --validate is a default value to be t
 It is better to use apply instead if the pod does not exist it will be created or updated
 
 `kubectl apply -f file.pod.yml`
+
+To create a pod via yml file:
+`kubectl create -f nginx.pod.yml --save-config` The --save-config is to save pod configuration which
+can be found in annotations section after running `kubectl get pod my-nginx -o yaml` -o stands for
+output. Another way to get inside of pod we can run `kubectl describe pod my-nginx`. --save-config should be used always with the create verb.
+
+To get into running container inside of pod we can do the same like in Docker
+`kubectl exec [pod-name] -it sh`
+
+We can also edit yml file with `kubectl edit -f nginx.pod.yml`
+And delete a pod `kubectl delete -f nginx.pod.yml`
