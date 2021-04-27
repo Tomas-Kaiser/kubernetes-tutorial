@@ -59,3 +59,31 @@ To get into running container inside of pod we can do the same like in Docker
 
 We can also edit yml file with `kubectl edit -f nginx.pod.yml`
 And delete a pod `kubectl delete -f nginx.pod.yml`
+
+Updated with liveness & readiness YML file:
+
+```
+apiVersion: v1      > Kubernetes API version
+kind: Pod           > Type of Kubernetes resource
+metadata:           > Metadata about the Bod
+  name: my-nginx
+spec:               > The spec/blueprint for the Pod
+  containers:       > Information about the containers that will run in the Pod
+  - name: my-nginx
+    image: nginx:alpine
+  livenessProbe:
+    httpGet:
+      path: /index.html
+      port: 80
+    initialDelaySeconds: 15
+    timeoutSeconds: 2
+    periodSeconds: 5
+    failureTreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /index.html
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 5
+
+```
