@@ -196,3 +196,48 @@ Volumes & Volume Mounts:
 - must have a unique name
 - attached to a Pod and may or may not be tied to the Pod's lifetime (depending on Volume type)
 - a Volume Mount references a Volume by name and defines a mountPath
+
+### Creating ConfigMaps & Secrets
+
+ConfigMaps provide a way to store configuration information and provide it to containers.
+
+ConfigMaps can be accessed from a Pod using:
+
+- Environment variable (key/value)
+- ConfigMap Volume (access as files)
+
+Creating a ConfigMap
+
+via ConfigMap Manifest
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-settings
+  labels:
+    app: app-settings
+data:
+  enemies: aliens
+  lives: "3"
+  enemies.cheat: "true"
+  enemies.cheat.level=noGoodRotten
+```
+
+`kubectl create -f file.configmap.yml --save-config`
+
+via defining kye/value pairs in a file
+
+enemies=aliens
+lives="3"
+enemies.cheat="true"
+enemies.cheat.level=noGoodRotten
+
+`kubectl create configmap [cm-name] --from-file=[path-to-file]`
+
+or from env file
+`kubectl create configmap [cm-name] --from-env-file=[path-to-file]`
+
+`kubectl get cm [cm-name] -o yaml` to print configMap
+
+![ConfigMap](./imgs/configmap.png)
