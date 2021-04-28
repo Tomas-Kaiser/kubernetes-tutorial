@@ -241,3 +241,9 @@ or from env file
 `kubectl get cm [cm-name] -o yaml` to print configMap
 
 ![ConfigMap](./imgs/configmap.png)
+
+Creating a Secret
+
+`kubectl create secret generic my-secret --from-literal=pwd=my-password`
+
+`kubectl get secrets`
